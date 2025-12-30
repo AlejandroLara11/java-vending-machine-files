@@ -1,30 +1,32 @@
-package maquina_snacks_archivos.presentation;
+package maquina_snacks_files.presentation;
 
-import maquina_snacks_archivos.domain.Snack;
-import maquina_snacks_archivos.service.Snacks;
+import maquina_snacks_files.domain.Snack;
+import maquina_snacks_files.service.ServiceSnacksI;
+import maquina_snacks_files.service.SnackServiceFiles;
+import maquina_snacks_files.service.SnackServiceList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class MaquinaSnacks {
-    public static void main(String[] args) {
-        maquinaSnacks();
+public class SnacksMachine {
+    public static void main(String[] args) {SnacksMachine();
     }
 
-    public static void maquinaSnacks(){
+    public static void SnacksMachine(){
 
-        var bandera_salida = false;
+        var flag_exit = false;
         var sc = new Scanner(System.in);
-        List<Snack> productos = new ArrayList<>();
+        ServiceSnacksI SnacksService = new SnackServiceFiles();
+        List<Snack> products = new ArrayList<>();
 
         System.out.println("Snack Vending Machine");
-        Snacks.mostrarSnacks();
+        SnacksService.showSnacks();
 
-        while(!bandera_salida){
+        while(!flag_exit){
             try{
-                var opcion = mostrarMenu(sc);
-                bandera_salida = ejecutarOpcion(opcion, sc, productos);
+                var option = showMenu(sc);
+                flag_exit = executeOption(option, sc, products, SnacksService);
             }catch(Exception e){
                 System.out.println("Unexpected error: " + e.getMessage());
             }
@@ -34,7 +36,7 @@ public class MaquinaSnacks {
         }
     }
 
-    private static int mostrarMenu(Scanner sc){
+    private static int showMenu(Scanner sc){
         System.out.print("-------Main Menu-------" +
                 "\n1. Buy Snacks" +
                 "\n2. Show ticket" +
@@ -44,61 +46,61 @@ public class MaquinaSnacks {
         return Integer.parseInt(sc.nextLine());
     }
 
-    private static boolean ejecutarOpcion(int opcion, Scanner sc, List<Snack> productos){
+    private static boolean executeOption(int option, Scanner sc, List<Snack> products, ServiceSnacksI SnacksService){
 
-        var salir = false;
-        switch (opcion){
-            case 1: comprarSnack(sc, productos);
+        var exit = false;
+        switch (option){
+            case 1: buySnack(sc, products, SnacksService);
             break;
-            case 2: mostrarTicket(productos);
+            case 2: showTicket(products);
             break;
-            case 3: agregarSnack(sc);
+            case 3: addSnack(sc, SnacksService);
             break;
             case 4:
                 System.out.println("Thank you for using this application... ");
-                salir = true;
+                exit = true;
             break;
             default:
-                System.out.println("Invalid Option " +  opcion);
+                System.out.println("Invalid Option " +  option);
         }
-        return salir;
+        return exit;
     }
 
-    private static void comprarSnack(Scanner sc, List<Snack> productos){
+    private static void buySnack(Scanner sc, List<Snack> productos,  ServiceSnacksI SnacksService){
         System.out.print("Select an snack: (ID): ");
         int idSnack = Integer.parseInt(sc.nextLine());
-        var snackEncontrado = false;
-        for (var snack : Snacks.getSnacks()){
+        var snackFounded = false;
+        for (var snack : SnacksService.getSnacks()){
             if(idSnack ==  snack.getIdSnack()) {
                 productos.add(snack);
-                snackEncontrado = true;
+                snackFounded = true;
                 System.out.println("Snack added!" + snack);
                 break;
             }
         }
-        if(!snackEncontrado){
+        if(!snackFounded){
             System.out.println("Snack not found!" + idSnack);
         }
     }
 
-    private static void mostrarTicket(List<Snack> productos){
+    private static void showTicket(List<Snack> products){
         var total = 0;
         var ticket = "\t***Ticket***";
-        for(Snack snack : productos){
+        for(Snack snack : products){
             total += snack.getPrice();
             ticket += "\n -" + snack.getName() + "  $" + snack.getPrice();
         }
         System.out.print(ticket + "\n\tTotal: $" + total);
     }
 
-    private static void agregarSnack(Scanner sc){
+    private static void addSnack(Scanner sc, ServiceSnacksI SnacksService){
         System.out.println("Enter Snack name: ");
         String name = sc.nextLine();
         System.out.println("Enter Snack price: ");
         var precio = Double.parseDouble(sc.nextLine());
-        Snacks.agregarSnack(new Snack(name, precio));
+        SnacksService.addSnack(new Snack(name, precio));
         System.out.println("Snack added!");
-        Snacks.mostrarSnacks();
+        SnacksService.showSnacks();
     }
 
 }
