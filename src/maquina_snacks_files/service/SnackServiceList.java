@@ -1,11 +1,11 @@
-package maquina_snacks_archivos.service;
+package maquina_snacks_files.service;
 
-import maquina_snacks_archivos.domain.Snack;
+import maquina_snacks_files.domain.Snack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Snacks {
+public class SnackServiceList implements ServiceSnacksI{
     public static final List<Snack> snacks;
 
     //bloque estatico inicializador
@@ -16,18 +16,18 @@ public class Snacks {
         snacks.add(new Snack("sandwich", 40));
     }
 
-    public static void agregarSnack(Snack snack){
+    public void addSnack(Snack snack){
         snacks.add(snack);
     }
 
-    public static void mostrarSnacks(){
+    public void showSnacks(){
         System.out.println("AVAILABLE SNACKS: ");
         for (Snack elemento : snacks) {
             System.out.println(elemento);
         }
     }
 
-    public static List<Snack> getSnacks(){
+    public List<Snack> getSnacks(){
         return snacks;
     }
 
