@@ -86,6 +86,12 @@ public class SnackServiceFiles implements ServiceSnacksI{
 
     @Override
     public void showSnacks() {
+        System.out.println("-----Snack Inventory-----");
+        var inventory = "";
+        for(var snack : this.snacks){
+            inventory += snack + "\n";
+        }
+        System.out.println(inventory);
     }
 
     @Override
