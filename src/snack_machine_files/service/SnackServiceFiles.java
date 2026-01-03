@@ -1,17 +1,19 @@
-package maquina_snacks_files.service;
+package snack_machine_files.service;
 
-import maquina_snacks_files.domain.Snack;
+import snack_machine_files.domain.Snack;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SnackServiceFiles implements ServiceSnacksI{
 
     private final String FILE_NAME = "Snacks.txt";
-    private final List<Snack> snacks = new ArrayList<>();
+    private List<Snack> snacks = new ArrayList<>();
 
     public SnackServiceFiles() {
         //check if archivo exists
@@ -20,7 +22,7 @@ public class SnackServiceFiles implements ServiceSnacksI{
         try {
             exists = archivo.exists();
             if (exists) {
-                //this.snacks = obtainSnacks();
+                this.snacks = obtainSnacks();
             }else{
                 var output = new PrintWriter(new FileWriter(FILE_NAME));
                 output.close();
@@ -56,7 +58,7 @@ public class SnackServiceFiles implements ServiceSnacksI{
         try {
             anexar = archivo.exists();
             var output =  new PrintWriter(new FileWriter(FILE_NAME, anexar));
-            output.println(snack);
+            output.println(snack.writeSnack());
             output.close();
         }
         catch (Exception e){
@@ -64,9 +66,26 @@ public class SnackServiceFiles implements ServiceSnacksI{
         }
     }
 
+    private List<Snack> obtainSnacks(){
+        var snacks = new ArrayList<Snack>();
+        try {
+            List<String> lineas = Files.readAllLines(Paths.get(FILE_NAME));
+            for(String linea : lineas){
+                String[] lineaSplited = linea.split(",");
+                var id_snack = lineaSplited[0];
+                var name_snack = lineaSplited[1];
+                var price_snack = lineaSplited[2];
+                var snack = new Snack(name_snack, Double.parseDouble(price_snack));
+                snacks.add(snack);
+            }
+        }catch (Exception e){
+            System.out.println("Unexpected error at obtain snacks: "  + e.getMessage());
+        }
+        return snacks;
+    }
+
     @Override
     public void showSnacks() {
-
     }
 
     @Override
