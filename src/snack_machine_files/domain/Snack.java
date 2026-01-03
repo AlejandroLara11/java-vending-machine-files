@@ -1,4 +1,4 @@
-package maquina_snacks_files.domain;
+package snack_machine_files.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -48,6 +48,10 @@ public class Snack implements Serializable {
     @Override
     public String toString() {
         return "Snack: "+ "ID = " + idSnack + ", name = " +  name + ", price = " + price;
+    }
+
+    public String writeSnack(){
+        return idSnack + "," + name + "," + price;
     }
 
     @Override
